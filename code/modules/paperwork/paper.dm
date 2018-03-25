@@ -273,7 +273,7 @@
 
 		t = "<font face=\"[crayonfont]\" color=[P ? P.colour : "black"]><b>[t]</b></font>"
 
-
+	t = replacetext(t, "&#255;", "&#1103;")
 //	t = replacetext(t, "#", "") // Junk converted to nothing!
 
 //Count the fields

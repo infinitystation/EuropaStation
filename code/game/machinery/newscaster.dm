@@ -67,9 +67,9 @@
 	newChannel.locked = locked
 	newChannel.is_admin_channel = adminChannel
 	if(announcement_message)
-		newChannel.announcement = announcement_message
+		newChannel.announcement = sanitize_u2a(announcement_message)
 	else
-		newChannel.announcement = "Breaking news from [channel_name]!"
+		newChannel.announcement = sanitize_u2a("Breaking news from [channel_name]!")
 	network_channels += newChannel
 
 /datum/feed_network/proc/SubmitArticle(var/msg, var/author, var/channel_name, var/obj/item/photo/photo, var/adminMessage = 0, var/message_type = "")
@@ -465,7 +465,7 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 	if ((usr.contents.Find(src) || ((get_dist(src, usr) <= 1) && istype(src.loc, /turf))) || (istype(usr, /mob/living/silicon)))
 		usr.set_machine(src)
 		if(href_list["set_channel_name"])
-			src.channel_name = sanitizeSafe(input(usr, "Provide a Feed Channel Name", "Network Channel Handler", ""), MAX_LNAME_LEN)
+			src.channel_name = sanitize_a2u(sanitizeSafe(input(usr, "Provide a Feed Channel Name", "Network Channel Handler", ""), MAX_LNAME_LEN))
 			src.updateUsrDialog()
 			//src.update_icon()
 
@@ -565,7 +565,7 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 			src.updateUsrDialog()
 
 		else if(href_list["set_wanted_name"])
-			src.channel_name = sanitizeSafe(input(usr, "Provide the name of the Wanted person", "Network Security Handler", ""), MAX_LNAME_LEN)
+			src.channel_name = sanitize_a2u(sanitizeSafe(input(usr, "Provide the name of the Wanted person", "Network Security Handler", ""), MAX_LNAME_LEN))
 			src.updateUsrDialog()
 
 		else if(href_list["set_wanted_desc"])

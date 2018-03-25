@@ -139,6 +139,7 @@ var/global/const/base_law_type = /datum/ai_laws/corporate
 		if(AL.law == law)
 			return
 
+	law = sanitize_a0(law)
 	var/new_law = new/datum/ai_law/inherent(law)
 	inherent_laws += new_law
 	if(state_inherent.len < inherent_laws.len)

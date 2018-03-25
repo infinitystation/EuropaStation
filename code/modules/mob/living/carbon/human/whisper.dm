@@ -2,7 +2,7 @@
 /mob/living/carbon/human/whisper(message as text)
 	var/alt_name = ""
 
-	message = sanitize(message)
+	//message = sanitize(message)
 	log_whisper("[src.name]/[src.key] : [message]")
 
 	if (src.client)

@@ -22,6 +22,9 @@
  * Text sanitization
  */
 
+/proc/fix_html(var/t)
+	return replacetext(t, "ÿ", "&#1103;")
+
 //Used for preprocessing entered text
 /proc/sanitize(var/input, var/max_length = MAX_MESSAGE_LEN, var/encode = 1, var/trim = 1, var/extra = 1)
 	if(!input)
@@ -29,6 +32,8 @@
 
 	if(max_length)
 		input = copytext(input,1,max_length)
+
+	input = replace_characters(input, list("ÿ"="___255_"))
 
 	if(extra)
 		input = replace_characters(input, list("\n"=" ","\t"=" "))
@@ -47,6 +52,8 @@
 	if(trim)
 		//Maybe, we need trim text twice? Here and before copytext?
 		input = trim(input)
+
+	input = replace_characters(input, list("___255_"="&#255;"))
 
 	return input
 
@@ -128,7 +135,6 @@
 	for(var/i=1, i<=length(text), i++)
 		switch(text2ascii(text,i))
 			if(62,60,92,47)	return			//rejects the text if it contains these bad characters: <, >, \ or /
-			if(127 to 255)	return			//rejects weird letters like ï¿½
 			if(0 to 31)		return			//more weird stuff
 			if(32)			continue		//whitespace
 			else			non_whitespace = 1
@@ -136,7 +142,7 @@
 
 
 //Old variant. Haven't dared to replace in some places.
-/proc/sanitize_old(var/t,var/list/repl_chars = list("\n"="#","\t"="#"))
+/proc/sanitize_old(var/t,var/list/repl_chars = list("ÿ"="___255_"))
 	return html_encode(replace_characters(t,repl_chars))
 
 /*
@@ -298,7 +304,15 @@ proc/TextPreview(var/string,var/len=40)
 
 //alternative copytext() for encoded text, doesn't break html entities (&#34; and other)
 /proc/copytext_preserve_html(var/text, var/first, var/last)
-	return html_encode(copytext(html_decode(text), first, last))
+	var/temp = replacetextEx(text, "&#255;", "ß")
+	temp = replacetextEx(temp, "&#1103;", "ß")
+	var/delta = length(text) - length(temp)
+	if(delta < 0)
+		delta = 0
+	var/msg = html_encode(copytext(html_decode(text), first, last + delta))
+	msg = replacetextEx(msg, "&amp;#255;", "&#255;")
+	msg = replacetextEx(msg, "&amp;#1103;", "&#1103;")
+	return msg
 
 //For generating neat chat tag-images
 //The icon var could be local in the proc, but it's a waste of resources
@@ -333,6 +347,190 @@ proc/TextPreview(var/string,var/len=40)
 	. = jointext(.,null)
 
 #define starts_with(string, substring) (copytext(string,1,1+length(substring)) == substring)
+
+//unicode sanitization
+/proc/sanitize_u(t)
+	t = html_encode(sanitize(t))
+	t = replacetext(t, "____255_", "&#1103;")
+	return t
+
+//convertion cp1251 to unicode
+/proc/sanitize_a2u(t)
+	t = replacetext(t, "&#255;", "&#1103;")
+	return t
+
+//convertion unicode to cp1251
+/proc/sanitize_u2a(t)
+	t = replacetext(t, "&#1103;", "&#255;")
+	return t
+
+//clean sanitize cp1251
+/proc/sanitize_a0(t)
+	t = replacetext(t, "ÿ", "&#255;")
+	return t
+
+//clean sanitize unicode
+/proc/sanitize_u0(t)
+	t = replacetext(t, "ÿ", "&#1103;")
+	return t
+
+/proc/remore_cyrillic(t)
+	var/list/symbols = list("à", "á", "â", "ã", "ä", "å", "¸", "æ", "ç", "è", "é", "ê", "ë", "ì", \
+	"í", "î", "ï", "ð", "ñ", "ò", "ó", "ô", "õ", "ö", "÷", "ø", "ù", "ü", "û", "ú", "ý", "þ", "ÿ", \
+	"À", "Á", "Â", "Ã", "Ä", "Å", "¨", "Æ", "Ç", "È", "É", "Ê", "Ë", "Ì", "Í", "Î", "Ï", \
+	"Ð", "Ñ", "Ò", "Ó", "Ô", "Õ", "Ö", "×", "Ø", "Ù", "Ü", "Û", "Ú", "Ý", "Þ", "ß")
+	for(var/i in symbols)
+		t = replacetext(t, i, "")
+	return t
+var/list/alphabet = list("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z")
+/proc/extA2U(t)
+	if(DM_VERSION < 511)
+		//¨, ¸
+		t = replacetextEx(t, "\\xa8", "\\u0401")
+		t = replacetextEx(t, "\\xb8", "\\u0451")
+		//À-Ï
+		t = replacetextEx(t, "\\xc0", "\\u0410")
+		t = replacetextEx(t, "\\xc1", "\\u0411")
+		t = replacetextEx(t, "\\xc2", "\\u0412")
+		t = replacetextEx(t, "\\xc3", "\\u0413")
+		t = replacetextEx(t, "\\xc4", "\\u0414")
+		t = replacetextEx(t, "\\xc5", "\\u0415")
+		t = replacetextEx(t, "\\xc6", "\\u0416")
+		t = replacetextEx(t, "\\xc7", "\\u0417")
+		t = replacetextEx(t, "\\xc8", "\\u0418")
+		t = replacetextEx(t, "\\xc9", "\\u0419")
+		t = replacetextEx(t, "\\xca", "\\u041a")
+		t = replacetextEx(t, "\\xcb", "\\u041b")
+		t = replacetextEx(t, "\\xcc", "\\u041c")
+		t = replacetextEx(t, "\\xcd", "\\u041d")
+		t = replacetextEx(t, "\\xce", "\\u041e")
+		t = replacetextEx(t, "\\xcf", "\\u041f")
+		//Ð-ß
+		t = replacetextEx(t, "\\xd0", "\\u0420")
+		t = replacetextEx(t, "\\xd1", "\\u0421")
+		t = replacetextEx(t, "\\xd2", "\\u0422")
+		t = replacetextEx(t, "\\xd3", "\\u0423")
+		t = replacetextEx(t, "\\xd4", "\\u0424")
+		t = replacetextEx(t, "\\xd5", "\\u0425")
+		t = replacetextEx(t, "\\xd6", "\\u0426")
+		t = replacetextEx(t, "\\xd7", "\\u0427")
+		t = replacetextEx(t, "\\xd8", "\\u0428")
+		t = replacetextEx(t, "\\xd9", "\\u0429")
+		t = replacetextEx(t, "\\xda", "\\u042a")
+		t = replacetextEx(t, "\\xdb", "\\u042b")
+		t = replacetextEx(t, "\\xdc", "\\u042c")
+		t = replacetextEx(t, "\\xdd", "\\u042d")
+		t = replacetextEx(t, "\\xde", "\\u042e")
+		t = replacetextEx(t, "\\xdf", "\\u042f")
+		//à-ï
+		t = replacetextEx(t, "\\xe0", "\\u0430")
+		t = replacetextEx(t, "\\xe1", "\\u0431")
+		t = replacetextEx(t, "\\xe2", "\\u0432")
+		t = replacetextEx(t, "\\xe3", "\\u0433")
+		t = replacetextEx(t, "\\xe4", "\\u0434")
+		t = replacetextEx(t, "\\xe5", "\\u0435")
+		t = replacetextEx(t, "\\xe6", "\\u0436")
+		t = replacetextEx(t, "\\xe7", "\\u0437")
+		t = replacetextEx(t, "\\xe8", "\\u0438")
+		t = replacetextEx(t, "\\xe9", "\\u0439")
+		t = replacetextEx(t, "\\xea", "\\u043a")
+		t = replacetextEx(t, "\\xeb", "\\u043b")
+		t = replacetextEx(t, "\\xec", "\\u043c")
+		t = replacetextEx(t, "\\xed", "\\u043d")
+		t = replacetextEx(t, "\\xee", "\\u043e")
+		t = replacetextEx(t, "\\xef", "\\u043f")
+		//ð-ÿ
+		t = replacetextEx(t, "\\xf0", "\\u0440")
+		t = replacetextEx(t, "\\xf1", "\\u0441")
+		t = replacetextEx(t, "\\xf2", "\\u0442")
+		t = replacetextEx(t, "\\xf3", "\\u0443")
+		t = replacetextEx(t, "\\xf4", "\\u0444")
+		t = replacetextEx(t, "\\xf5", "\\u0445")
+		t = replacetextEx(t, "\\xf6", "\\u0446")
+		t = replacetextEx(t, "\\xf7", "\\u0447")
+		t = replacetextEx(t, "\\xf8", "\\u0448")
+		t = replacetextEx(t, "\\xf9", "\\u0449")
+		t = replacetextEx(t, "\\xfa", "\\u044a")
+		t = replacetextEx(t, "\\xfb", "\\u044b")
+		t = replacetextEx(t, "\\xfc", "\\u044c")
+		t = replacetextEx(t, "\\xfd", "\\u044d")
+		t = replacetextEx(t, "\\xfe", "\\u044e")
+	else
+		//¨, ¸
+		t = replacetextEx(t, "\\u00a8", "\\u0401")
+		t = replacetextEx(t, "\\u00b8", "\\u0451")
+		//À-Ï
+		t = replacetextEx(t, "\\u00c0", "\\u0410")
+		t = replacetextEx(t, "\\u00c1", "\\u0411")
+		t = replacetextEx(t, "\\u00c2", "\\u0412")
+		t = replacetextEx(t, "\\u00c3", "\\u0413")
+		t = replacetextEx(t, "\\u00c4", "\\u0414")
+		t = replacetextEx(t, "\\u00c5", "\\u0415")
+		t = replacetextEx(t, "\\u00c6", "\\u0416")
+		t = replacetextEx(t, "\\u00c7", "\\u0417")
+		t = replacetextEx(t, "\\u00c8", "\\u0418")
+		t = replacetextEx(t, "\\u00c9", "\\u0419")
+		t = replacetextEx(t, "\\u00ca", "\\u041a")
+		t = replacetextEx(t, "\\u00cb", "\\u041b")
+		t = replacetextEx(t, "\\u00cc", "\\u041c")
+		t = replacetextEx(t, "\\u00cd", "\\u041d")
+		t = replacetextEx(t, "\\u00ce", "\\u041e")
+		t = replacetextEx(t, "\\u00cf", "\\u041f")
+		//Ð-ß
+		t = replacetextEx(t, "\\u00d0", "\\u0420")
+		t = replacetextEx(t, "\\u00d1", "\\u0421")
+		t = replacetextEx(t, "\\u00d2", "\\u0422")
+		t = replacetextEx(t, "\\u00d3", "\\u0423")
+		t = replacetextEx(t, "\\u00d4", "\\u0424")
+		t = replacetextEx(t, "\\u00d5", "\\u0425")
+		t = replacetextEx(t, "\\u00d6", "\\u0426")
+		t = replacetextEx(t, "\\u00d7", "\\u0427")
+		t = replacetextEx(t, "\\u00d8", "\\u0428")
+		t = replacetextEx(t, "\\u00d9", "\\u0429")
+		t = replacetextEx(t, "\\u00da", "\\u042a")
+		t = replacetextEx(t, "\\u00db", "\\u042b")
+		t = replacetextEx(t, "\\u00dc", "\\u042c")
+		t = replacetextEx(t, "\\u00dd", "\\u042d")
+		t = replacetextEx(t, "\\u00de", "\\u042e")
+		t = replacetextEx(t, "\\u00df", "\\u042f")
+		//à-ï
+		t = replacetextEx(t, "\\u00e0", "\\u0430")
+		t = replacetextEx(t, "\\u00e1", "\\u0431")
+		t = replacetextEx(t, "\\u00e2", "\\u0432")
+		t = replacetextEx(t, "\\u00e3", "\\u0433")
+		t = replacetextEx(t, "\\u00e4", "\\u0434")
+		t = replacetextEx(t, "\\u00e5", "\\u0435")
+		t = replacetextEx(t, "\\u00e6", "\\u0436")
+		t = replacetextEx(t, "\\u00e7", "\\u0437")
+		t = replacetextEx(t, "\\u00e8", "\\u0438")
+		t = replacetextEx(t, "\\u00e9", "\\u0439")
+		t = replacetextEx(t, "\\u00ea", "\\u043a")
+		t = replacetextEx(t, "\\u00eb", "\\u043b")
+		t = replacetextEx(t, "\\u00ec", "\\u043c")
+		t = replacetextEx(t, "\\u00ed", "\\u043d")
+		t = replacetextEx(t, "\\u00ee", "\\u043e")
+		t = replacetextEx(t, "\\u00ef", "\\u043f")
+		//ð-ÿ
+		t = replacetextEx(t, "\\u00f0", "\\u0440")
+		t = replacetextEx(t, "\\u00f1", "\\u0441")
+		t = replacetextEx(t, "\\u00f2", "\\u0442")
+		t = replacetextEx(t, "\\u00f3", "\\u0443")
+		t = replacetextEx(t, "\\u00f4", "\\u0444")
+		t = replacetextEx(t, "\\u00f5", "\\u0445")
+		t = replacetextEx(t, "\\u00f6", "\\u0446")
+		t = replacetextEx(t, "\\u00f7", "\\u0447")
+		t = replacetextEx(t, "\\u00f8", "\\u0448")
+		t = replacetextEx(t, "\\u00f9", "\\u0449")
+		t = replacetextEx(t, "\\u00fa", "\\u044a")
+		t = replacetextEx(t, "\\u00fb", "\\u044b")
+		t = replacetextEx(t, "\\u00fc", "\\u044c")
+		t = replacetextEx(t, "\\u00fd", "\\u044d")
+		t = replacetextEx(t, "\\u00fe", "\\u044e")
+	t = replacetextEx(t, "&amp;#255;", "\\u044f")
+	t = replacetextEx(t, "&amp;#1103;", "\\u044f")
+	t = replacetextEx(t, "&#255;", "\\u044f")
+	t = replacetextEx(t, "&#1103;", "\\u044f")
+	return t
 
 #define gender2text(gender) capitalize(gender)
 
