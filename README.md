@@ -1,6 +1,6 @@
 # europa
 
-[Website](http://europa.gn32.uk/) - [Code](https://github.com/Yonaguni/EuropaStation/) - [IRC](irc://irc.sorcery.net/#yonaguni)
+[Website](http://europa.gn32.uk/) - [Original Code](https://github.com/Yonaguni/EuropaStation/) - [IRC](https://discord.gg/3wurS) - [Discord (Infinity)](https://discord.gg/3wurS)
 
 ---
 
