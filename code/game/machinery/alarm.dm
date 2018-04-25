@@ -776,6 +776,7 @@
 				//user << "You pop the Air Alarm's maintence panel open."
 				wiresexposed = !wiresexposed
 				user << "The wires have been [wiresexposed ? "exposed" : "unexposed"]"
+				playsound(src.loc, "sound/machines/Custom_screwdriver[wiresexposed ? "open" : "close"].ogg", 50, 1)
 				update_icon()
 				return
 
@@ -955,6 +956,8 @@ FIRE ALARM
 
 	if (W.isscrewdriver() && buildstage == 2)
 		wiresexposed = !wiresexposed
+		to_chat(user, "The wires have been [wiresexposed ? "exposed" : "unexposed"].")
+		playsound(src.loc, "sound/machines/Custom_screwdriver[wiresexposed ? "open" : "close"].ogg", 50, 1)
 		update_icon()
 		return
 

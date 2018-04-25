@@ -47,6 +47,7 @@
 
 	var/list/idle_threads = list()							// Idle programs on background. They still receive process calls but can't be interacted with.
 
+	var/ambience_last_played	// Last time sound was played
 
 // Eject ID card from computer, if it has ID slot with card inside.
 /obj/item/modular_computer/verb/eject_id()
@@ -288,6 +289,10 @@
 
 	handle_power() // Handles all computer power interaction
 	check_update_ui_need()
+
+	if (screen_on && enabled && world.time > ambience_last_played + 30 SECONDS && prob(3))
+		playsound(loc, "computerbeep", 30, 1, 10)
+		ambience_last_played = world.time
 
 // Function used by NanoUI's to obtain data for header. All relevant entries begin with "PC_"
 /obj/item/modular_computer/proc/get_header_data()

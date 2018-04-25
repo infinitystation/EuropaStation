@@ -316,6 +316,7 @@
 
 	//actually throw it!
 	src.visible_message("<span class='danger'>[src] has thrown [item]!</span>")
+	playsound(src, 'sound/effects/throw.ogg', 50, 1)
 
 	if(!src.lastarea)
 		src.lastarea = get_area(src.loc)

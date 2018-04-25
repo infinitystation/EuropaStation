@@ -2,6 +2,7 @@
 	name = "item"
 	icon = 'icons/obj/items.dmi'
 	w_class = 3.0
+	does_spin = TRUE
 
 	var/displays_id = 1
 	var/image/blood_overlay = null //this saves our blood splatter overlay, which will be processed not to go over the edges of the sprite
@@ -708,3 +709,12 @@ modules/mob/living/carbon/human/life.dm if you die, you will be zoomed out.
 	I.pixel_y = apply_y_offset
 
 	return I
+
+/atom/movable/proc/throw_at_random(var/include_own_turf, var/maxrange, var/speed)
+	var/list/turfs = trange(maxrange, src)
+	if(!maxrange)
+		maxrange = 1
+
+	if(!include_own_turf)
+		turfs -= get_turf(src)
+	src.throw_at(pick(turfs), maxrange, speed, src)

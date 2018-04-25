@@ -38,6 +38,7 @@
 	if(usr.put_in_hands(holding))
 		usr.visible_message("<span class='danger'>\The [usr] pulls a knife out of their boot!</span>")
 		holding = null
+		playsound(src, 'sound/effects/holster/sheathout.ogg', 25)
 	else
 		usr << "<span class='warning'>Your need an empty, unbroken hand to do that.</span>"
 		holding.forceMove(src)

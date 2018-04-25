@@ -200,6 +200,12 @@ its easier to just keep the beam vertical.
 
 //All atoms
 /atom/proc/examine(mob/user, var/distance = -1, var/infix = "", var/suffix = "")
+	if(!isobserver(user))
+		if(get_dist(user, src) > 3)
+			to_chat(user, "<span class='info'>It's too far away to see clearly.</span>")
+			return
+		user.visible_message("<font size=1>[user.name] looks at [src].</font>")
+
 	//This reformat names to get a/an properly working on item descriptions when they are bloody
 	var/f_name = "\a [src][infix]."
 	if(src.blood_DNA && !istype(src, /obj/effect/decal))

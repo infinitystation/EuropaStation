@@ -10,6 +10,7 @@
 	var/heal_brute = 0
 	var/heal_burn = 0
 	var/animal_heal = 3
+	var/apply_sounds
 
 /obj/item/stack/medical/attack(var/mob/living/carbon/M, var/mob/user)
 	if (!istype(M))
@@ -55,6 +56,7 @@
 	singular_name = "gauze length"
 	desc = "Some sterile gauze to wrap around bloody stumps."
 	icon_state = "brutepack"
+	apply_sounds = list('sound/effects/rip1.ogg','sound/effects/rip2.ogg')
 
 	animal_heal = 5
 
@@ -99,6 +101,7 @@
 					user.visible_message("<span class='notice'>\The [user] places a bandaid over \a [W.desc] on [M]'s [affecting.name].</span>", \
 					                              "<span class='notice'>You place a bandaid over \a [W.desc] on [M]'s [affecting.name].</span>" )
 				W.bandage()
+				playsound(src, pick(apply_sounds), 25)
 				used++
 			affecting.update_damages()
 			if(used == amount)
@@ -117,6 +120,7 @@
 	heal_burn = 1
 
 	animal_heal = 4
+	apply_sounds = list('sound/effects/ointment.ogg')
 
 /obj/item/stack/medical/ointment/attack(var/mob/living/carbon/M, var/mob/user)
 	if(..())
@@ -136,6 +140,7 @@
 		else
 			user.visible_message("<span class='notice'>\The [user] starts salving wounds on [M]'s [affecting.name].</span>", \
 					             "<span class='notice'>You start salving the wounds on [M]'s [affecting.name].</span>" )
+			playsound(src, pick(apply_sounds), 25)
 			if(!do_mob(user, M, 10))
 				user << "<span class='notice'>You must stand still to salve wounds.</span>"
 				return 1
@@ -152,6 +157,7 @@
 	heal_brute = 0
 
 	animal_heal = 12
+	apply_sounds = list('sound/effects/rip1.ogg','sound/effects/rip2.ogg','sound/effects/tape.ogg')
 
 /obj/item/stack/medical/advanced/bruise_pack/attack(var/mob/living/carbon/M, var/mob/user)
 	if(..())
@@ -191,6 +197,7 @@
 				else
 					user.visible_message("<span class='notice'>\The [user] smears some bioglue over \a [W.desc] on [M]'s [affecting.name].</span>", \
 					                              "<span class='notice'>You smear some bioglue over \a [W.desc] on [M]'s [affecting.name].</span>" )
+				playsound(src, pick(apply_sounds), 25)
 				W.bandage()
 				W.disinfect()
 				W.heal_damage(heal_brute)
@@ -211,7 +218,7 @@
 	heal_burn = 0
 
 	animal_heal = 7
-
+	apply_sounds = list('sound/effects/ointment.ogg')
 
 /obj/item/stack/medical/advanced/ointment/attack(var/mob/living/carbon/M, var/mob/user)
 	if(..())
@@ -230,6 +237,7 @@
 		else
 			user.visible_message("<span class='notice'>\The [user] starts salving wounds on [M]'s [affecting.name].</span>", \
 					             "<span class='notice'>You start salving the wounds on [M]'s [affecting.name].</span>" )
+			playsound(src, pick(apply_sounds), 25)
 			if(!do_mob(user, M, 10))
 				user << "<span class='notice'>You must stand still to salve wounds.</span>"
 				return 1

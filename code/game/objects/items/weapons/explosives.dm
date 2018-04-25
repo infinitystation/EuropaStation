@@ -65,8 +65,21 @@
 
 		target.overlays += image_overlay
 		user << "Bomb has been planted. Timer counting down from [timer]."
-		spawn(timer*10)
-			explode(get_turf(target))
+	//	spawn(timer*10)
+	//		explode(get_turf(target))
+		run_timer()
+
+/obj/item/plastique/proc/run_timer() //Basically exists so the C4 will beep when running. Better idea than putting sleeps in attackby.
+	set waitfor = 0
+	var/T = timer
+	while(T > 0)
+		sleep(1 SECOND)
+		if(target)
+			playsound(target, 'sound/items/timer.ogg', 50)
+		else
+			playsound(loc, 'sound/items/timer.ogg', 50)
+		T--
+	explode(get_turf(target))
 
 /obj/item/plastique/proc/explode(var/location)
 	if(!target)

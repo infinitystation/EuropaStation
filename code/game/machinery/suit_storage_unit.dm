@@ -299,6 +299,7 @@
 		src.eject_occupant(user)
 		return  // eject_occupant opens the door, so we need to return
 	src.isopen = !src.isopen
+	playsound(src, 'sound/machines/suitstorage_cycledoor.ogg', 50, 0)
 	return
 
 
@@ -309,6 +310,7 @@
 	if(src.isopen)
 		return
 	src.islocked = !src.islocked
+	playsound(src, 'sound/machines/suitstorage_lockdoor.ogg', 50, 0)
 	return
 
 

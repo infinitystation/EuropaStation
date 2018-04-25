@@ -513,6 +513,7 @@
 		else
 			wiresexposed = !wiresexposed
 			user << "The wires have been [wiresexposed ? "exposed" : "unexposed"]"
+			playsound(src.loc, "sound/machines/Custom_screwdriver[wiresexposed ? "open" : "close"].ogg", 50, 1)
 			update_icon()
 
 	else if (istype(W, /obj/item/card/id)||istype(W, /obj/item/radio/headset/pda))			// trying to unlock the interface with an ID card

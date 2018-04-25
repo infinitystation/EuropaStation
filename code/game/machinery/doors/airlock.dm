@@ -1,5 +1,5 @@
 /obj/machinery/door/airlock
-	name = "Airlock"
+	name = "airlock"
 	icon = 'icons/obj/doors/Doorint.dmi'
 	icon_state = "door_closed"
 	power_channel = ENVIRON
@@ -31,8 +31,16 @@
 	var/secured_wires = 0
 	var/datum/wires/airlock/wires = null
 
-	var/open_sound_powered = 'sound/machines/airlock.ogg'
-	var/open_sound_unpowered = 'sound/machines/airlock_creaking.ogg'
+	var/open_sound_powered = 'sound/machines/airlock_open.ogg'
+	var/open_sound_unpowered = 'sound/machines/airlock_open_force.ogg'
+	var/open_failure_access_denied = 'sound/machines/buzz-two.ogg'
+
+	var/close_sound_powered = 'sound/machines/airlock_close.ogg'
+	var/close_sound_unpowered = 'sound/machines/airlock_close_force.ogg'
+	var/close_failure_blocked = 'sound/machines/triple_beep.ogg'
+
+	var/bolts_rising = 'sound/machines/bolts_up.ogg'
+	var/bolts_dropping = 'sound/machines/bolts_down.ogg'
 
 	var/door_crush_damage = DOOR_CRUSH_DAMAGE
 
@@ -396,6 +404,8 @@ About the new airlock wires panel:
 
 	if(feedback && message)
 		usr << message
+	if(.)
+		playsound(src, 'sound/effects/sparks3.ogg', 30, 0, -6)
 
 /obj/machinery/door/airlock/proc/set_idscan(var/activate, var/feedback = 0)
 	var/message = ""
@@ -499,7 +509,7 @@ About the new airlock wires panel:
 			if(density && src.arePowerSystemsOn())
 				flick("door_deny", src)
 				if(secured_wires)
-					playsound(src.loc, 'sound/machines/buzz-two.ogg', 50, 0)
+					playsound(src.loc, open_failure_access_denied, 50, 0)
 	return
 
 /obj/machinery/door/airlock/attack_ai(var/mob/user)
@@ -727,6 +737,9 @@ About the new airlock wires panel:
 				src.p_open = 0
 		else
 			src.p_open = 1
+		if(!stat & BROKEN)
+			user.visible_message("[user] [p_open ? "exposed" : "unexposed"] the airlock wire panel.",  "You [p_open ? "exposed" : "unexposed"] the airlock wire panel.")
+			playsound(src.loc, "sound/machines/Custom_screwdriver[p_open ? "open" : "close"].ogg", 50, 1)
 		src.update_icon()
 	else if(C.iswirecutter())
 		return src.attack_hand(user)
@@ -863,7 +876,7 @@ About the new airlock wires panel:
 			for(var/atom/movable/AM in turf)
 				if(AM.blocks_airlock())
 					if(world.time > next_beep_at)
-						playsound(src.loc, 'sound/machines/buzz-two.ogg', 50, 0)
+						playsound(src.loc, close_failure_blocked, 30, 0, -3)
 						next_beep_at = world.time + SecondsToTicks(10)
 					close_door_at = world.time + 6
 					return
@@ -876,9 +889,9 @@ About the new airlock wires panel:
 
 	use_power(360)	//360 W seems much more appropriate for an actuator moving an industrial door capable of crushing people
 	if(arePowerSystemsOn())
-		playsound(src.loc, open_sound_powered, 100, 1)
+		playsound(src.loc, close_sound_powered, 100, 1)
 	else
-		playsound(src.loc, open_sound_unpowered, 100, 1)
+		playsound(src.loc, close_sound_unpowered, 100, 1)
 
 	..()
 
@@ -889,6 +902,7 @@ About the new airlock wires panel:
 	if (operating && !forced) return 0
 
 	src.locked = 1
+	playsound(src, bolts_dropping, 30, 0, -6)
 	for(var/mob/M in range(1,src))
 		M.show_message("You hear a click from the bottom of the door.", 2)
 	update_icon()
@@ -902,6 +916,7 @@ About the new airlock wires panel:
 		if(operating || !src.arePowerSystemsOn() || isWireCut(AIRLOCK_WIRE_DOOR_BOLTS)) return
 
 	src.locked = 0
+	playsound(src, bolts_rising, 30, 0, -6)
 	for(var/mob/M in range(1,src))
 		M.show_message("You hear a click from the bottom of the door.", 2)
 	update_icon()

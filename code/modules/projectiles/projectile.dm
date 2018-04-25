@@ -67,6 +67,7 @@
 	var/datum/vector_loc/location		// current location of the projectile in pixel space
 	var/matrix/effect_transform			// matrix to rotate and scale projectile effects - putting it here so it doesn't
 										//  have to be recreated multiple times
+	var/list/mob_hit_sound
 
 //TODO: make it so this is called more reliably, instead of sometimes by bullet_act() and sometimes not
 /obj/item/projectile/proc/on_hit(var/atom/target, var/blocked = 0, var/def_zone = null)
@@ -189,7 +190,8 @@
 		target_mob << "<span class='danger'>You've been hit in the [parse_zone(def_zone)] by \the [src]!</span>"
 	else
 		target_mob.visible_message("<span class='danger'>\The [target_mob] is hit by \the [src] in the [parse_zone(def_zone)]!</span>")//X has fired Y is now given by the guns so you cant tell who shot you if you could not see the shooter
-
+	if(mob_hit_sound)
+		playsound(target_mob, pick(mob_hit_sound), 60, 1)
 	//admin logs
 	if(!no_attack_log)
 		if(istype(firer, /mob))

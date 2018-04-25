@@ -1,4 +1,10 @@
 /mob/living/carbon/human/examine(mob/user)
+	if(!isobserver(user))
+		if(get_dist(user, src) > 3)
+			to_chat(user, "<span class='info'>It's too far away to see clearly.</span>")
+			return
+		user.visible_message("<font size=1>[user.name] looks at [src].</font>")
+
 	var/skipgloves = 0
 	var/skipsuitstorage = 0
 	var/skipjumpsuit = 0

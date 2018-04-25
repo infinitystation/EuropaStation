@@ -179,6 +179,7 @@
 	else if(W.isscrewdriver())
 		src.panel_open = !src.panel_open
 		user << "You [src.panel_open ? "open" : "close"] the maintenance panel."
+		playsound(src.loc, "sound/machines/Custom_screwdriver[src.panel_open ? "open" : "close"].ogg", 50, 1)
 		src.overlays.Cut()
 		if(src.panel_open)
 			src.overlays += image(src.icon, "[initial(icon_state)]-panel")
@@ -498,6 +499,7 @@
 			if(R.get_product(get_turf(src)))
 				src.visible_message("<span class='notice'>\The [src] clunks as it vends an additional item.</span>")
 
+		playsound(src.loc, 'sound/machines/vending_drop.ogg', 65, 1)
 		src.status_message = ""
 		src.status_error = 0
 		src.vend_ready = 1

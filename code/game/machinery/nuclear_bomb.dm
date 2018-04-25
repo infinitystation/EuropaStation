@@ -37,6 +37,7 @@ var/bomb_set
 /obj/machinery/nuclearbomb/process()
 	if (src.timing)
 		src.timeleft = max(timeleft - 2, 0) // 2 seconds per process()
+		playsound(loc, 'sound/items/timer.ogg', timeleft <= 30 ? 50 : 25)
 		if (timeleft <= 0)
 			spawn
 				explode()

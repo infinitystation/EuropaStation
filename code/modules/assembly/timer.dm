@@ -50,6 +50,7 @@
 	process()
 		if(timing && (time > 0))
 			time--
+			playsound(loc, 'sound/items/timer.ogg', 25)
 		if(timing && time <= 0)
 			timing = 0
 			timer_end()

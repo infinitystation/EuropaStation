@@ -15,6 +15,7 @@
 	var/throw_range = 7
 	var/moved_recently = 0
 	var/item_state = null // Used to specify the item state for the on-mob overlays.
+	var/does_spin = FALSE // Does the atom spin when thrown
 
 	var/list/grabbed_by
 
@@ -126,6 +127,8 @@
 		return 0
 	//use a modified version of Bresenham's algorithm to get from the atom's current position to that of the target
 	src.throwing = 1
+	if(src.does_spin)
+		src.SpinAnimation(4, 1)
 	src.thrower = thrower
 	src.throw_source = get_turf(src)	//store the origin turf
 	src.pixel_z = 0
