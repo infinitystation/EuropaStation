@@ -35,6 +35,7 @@
 
 	var/accuracy = 0
 	var/dispersion = 0.0
+	var/remains_type
 
 	var/damage = 10
 	var/damage_type = BRUTE //BRUTE, BURN, TOX, OXY, CLONE, HALLOSS are the only things that should be in here
@@ -67,6 +68,7 @@
 	var/datum/vector_loc/location		// current location of the projectile in pixel space
 	var/matrix/effect_transform			// matrix to rotate and scale projectile effects - putting it here so it doesn't
 										//  have to be recreated multiple times
+	var/list/mob_hit_sound
 
 //TODO: make it so this is called more reliably, instead of sometimes by bullet_act() and sometimes not
 /obj/item/projectile/proc/on_hit(var/atom/target, var/blocked = 0, var/def_zone = null)
@@ -88,7 +90,7 @@
 //Checks if the projectile is eligible for embedding. Not that it necessarily will.
 /obj/item/projectile/proc/can_embed()
 	//embed must be enabled and damage type must be brute
-	if(!embed || damage_type != BRUTE)
+	if(!remains_type || !embed || damage_type != BRUTE)
 		return 0
 	return 1
 
@@ -115,8 +117,10 @@
 	//randomize clickpoint a bit based on dispersion
 	if(dispersion)
 		var/radius = round((dispersion*0.443)*world.icon_size*0.8) //0.443 = sqrt(pi)/4 = 2a, where a is the side length of a square that shares the same area as a circle with diameter = dispersion
-		p_x = between(0, p_x + rand(-radius, radius), world.icon_size)
-		p_y = between(0, p_y + rand(-radius, radius), world.icon_size)
+		//p_x = between(0, p_x + rand(-radius, radius), world.icon_size)
+		//p_y = between(0, p_y + rand(-radius, radius), world.icon_size)
+		p_x = between(0, p_x + gaussian(0, radius) * 0.25, world.icon_size)
+		p_y = between(0, p_y + gaussian(0, radius) * 0.25, world.icon_size)
 
 //called to launch a projectile
 /obj/item/projectile/proc/launch(atom/target, var/target_zone, var/x_offset=0, var/y_offset=0, var/angle_offset=0)
@@ -170,8 +174,20 @@
 	if(!istype(target_mob))
 		return
 
-	//roll to-hit
-	miss_modifier = max(15*(distance-2) - round(15*accuracy) + miss_modifier, 0)
+	var/distance_input = round(12.5 (distance - 2))
+	var/accuracy_input = round(15 * accuracy)
+
+	miss_modifier = distance_input - accuracy_input + miss_modifier
+
+	if(distance <= 1)
+		miss_modifier -= 10
+
+	if(target_mob == original)
+		miss_modifier -= 30
+
+	if(firer == target_mob)
+		miss_modifier -= 30
+
 	var/hit_zone = get_zone_with_miss_chance(def_zone, target_mob, miss_modifier, ranged_attack=(distance > 1 || original != target_mob)) //if the projectile hits a target we weren't originally aiming at then retain the chance to miss
 
 	var/result = PROJECTILE_FORCE_MISS
@@ -189,7 +205,8 @@
 		target_mob << "<span class='danger'>You've been hit in the [parse_zone(def_zone)] by \the [src]!</span>"
 	else
 		target_mob.visible_message("<span class='danger'>\The [target_mob] is hit by \the [src] in the [parse_zone(def_zone)]!</span>")//X has fired Y is now given by the guns so you cant tell who shot you if you could not see the shooter
-
+	if(mob_hit_sound)
+		playsound(target_mob, pick(mob_hit_sound), 60, 1)
 	//admin logs
 	if(!no_attack_log)
 		if(istype(firer, /mob))
@@ -371,9 +388,8 @@
 				P.activate()
 
 /obj/item/projectile/proc/impact_effect(var/matrix/M)
-	if(ispath(impact_type))
+	if(ispath(impact_type) && location)
 		var/obj/effect/projectile/P = new impact_type(location.loc)
-
 		if(istype(P))
 			P.set_transform(M)
 			P.pixel_x = location.pixel_x

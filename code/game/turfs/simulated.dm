@@ -152,7 +152,7 @@
 		else
 			M.inertia_dir = 0
 
-	..()
+	. = ..()
 
 //returns 1 if made bloody, returns 0 otherwise
 /turf/simulated/add_blood(var/mob/living/carbon/human/M)
@@ -174,8 +174,5 @@
 
 // Only adds blood on the floor -- Skie
 /turf/simulated/proc/add_blood_floor(var/mob/living/carbon/M)
-	if( istype(M, /mob/living/carbon/alien ))
-		var/obj/effect/decal/cleanable/blood/xeno/this = new /obj/effect/decal/cleanable/blood/xeno(src)
-		this.blood_DNA["UNKNOWN BLOOD"] = "X*"
-	else if( istype(M, /mob/living/silicon/robot ))
+	if( istype(M, /mob/living/silicon/robot ))
 		new /obj/effect/decal/cleanable/blood/oil(src)

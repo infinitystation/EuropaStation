@@ -28,7 +28,7 @@
 
 	proc/bang(var/turf/T , var/mob/living/carbon/M)					// Added a new proc called 'bang' that takes a location and a person to be banged.
 		M << "<span class='danger'>BANG</span>"						// Called during the loop that bangs people in lockers/containers and when banging
-		playsound(src.loc, 'sound/effects/bang.ogg', 50, 1, 30)		// people in normal view.  Could theroetically be called during other explosions.
+		playsound(src.loc, 'sound/weapons/flashbang.ogg', 50, 1, 5)		// people in normal view.  Could theroetically be called during other explosions.
 																	// -- Polymorph
 
 //Checking for protections
@@ -66,6 +66,7 @@
 
 		else if(get_dist(M, T) <= 5)
 			if(!ear_safety)
+				M << sound('sound/weapons/flash_ring.ogg',0,1,0,100)
 				M.Stun(8)
 				M.ear_damage += rand(0, 3)
 				M.ear_deaf = max(M.ear_deaf,10)

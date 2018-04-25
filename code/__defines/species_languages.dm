@@ -1,5 +1,5 @@
 // Species flags.
-#define NO_MINOR_CUT      0x1    // Can step on broken glass with no ill-effects. Either thick skin (diona), cut resistant (slimes) or incorporeal (shadows)
+#define NO_MINOR_CUT      0x1    // Can step on broken glass with no ill-effects. Either thick skin cut resistant or incorporeal
 #define IS_PLANT          0x2    // Is a treeperson.
 #define NO_SCAN           0x4    // Cannot be scanned in a DNA machine/genome-stolen.
 #define NO_PAIN           0x8    // Cannot suffer halloss/recieves deceptive health indicator.
@@ -24,13 +24,16 @@
 #define RADIATION_GLOWS   0x40   // Radiation causes this character to glow.
 
 // Languages.
+#define LANGUAGE_SIGN       "Sign Language"
+#define LANGUAGE_SOLCOM     "Sol Common"
 #define LANGUAGE_EAL        "Encoded Audio Language"
 #define LANGUAGE_CEPHLAPODA "Cephalopoda"
 #define LANGUAGE_CORVID     "Corvid"
-#define LANGUAGE_TRADEBAND  "Tradeband"
-#define LANGUAGE_GUTTER     "Gutter"
-#define LANGUAGE_CULT       "Cult"
-
+#define LANGUAGE_RUNGLISH   "Runglish"
+#define LANGUAGE_EXTERIOR   "Exterior"
+#define LANGUAGE_LUNAR      "Lunar"
+#define LANGUAGE_BELTER     "Belter Cant"
+#define LANGUAGE_MONKEY     "Monkey"
 // Language flags.
 #define WHITELISTED  1   // Language is available if the speaker is whitelisted.
 #define RESTRICTED   2   // Language can only be acquired by spawning or an admin.

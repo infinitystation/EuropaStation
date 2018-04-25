@@ -16,6 +16,8 @@
 	var/obj/structure/ladder/target_up
 	var/obj/structure/ladder/target_down
 
+	var/static/list/climbsounds = list('sound/effects/ladder.ogg','sound/effects/ladder2.ogg','sound/effects/ladder3.ogg','sound/effects/ladder4.ogg')
+
 /obj/structure/ladder/initialize()
 	// the upper will connect to the lower
 	if(allowed_directions & DOWN) //we only want to do the top one, as it will initialize the ones before it.
@@ -69,6 +71,8 @@
 			M << "<span class='notice'>\The [A] is blocking \the [src].</span>"
 			return 0
 	if(M.Move(T))
+		playsound(src, pick(climbsounds), 50)
+		playsound(target, pick(climbsounds), 50)
 		return target == target_up ? UP : DOWN
 	return 0
 

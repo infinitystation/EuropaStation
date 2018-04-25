@@ -139,6 +139,10 @@ area/space/atmosalert()
 	flags = RAD_SHIELDED
 	sound_env = TUNNEL_ENCLOSED
 	turf_initializer = new /datum/area_initializer/maintenance()
+	ambience = list(
+		'sound/ambience/ambimaint1.ogg',
+		'sound/ambience/ambimaint4.ogg'
+	)
 
 // General hallways.
 /area/hallway

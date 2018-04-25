@@ -56,8 +56,6 @@
 	var/real_name = null
 
 	var/bhunger = 0			//Carbon
-	var/ajourn = 0
-	var/seer = 0 //for cult//Carbon, probably Human
 
 	var/druggy = 0			//Carbon
 	var/confused = 0		//Carbon
@@ -140,7 +138,7 @@
 	var/mob/teleop = null
 
 	var/turf/listed_turf = null  	//the current turf being examined in the stat panel
-	var/list/shouldnt_see = list()	//list of objects that this mob shouldn't see in the stat panel. this silliness is needed because of AI alt+click and cult blood runes
+	var/list/shouldnt_see = list()	//list of objects that this mob shouldn't see in the stat panel. this silliness is needed because of AI alt+click and blood runes
 
 	var/mob_size = MOB_MEDIUM
 

@@ -44,7 +44,7 @@ var/list/gamemode_cache = list()
 	var/feature_object_spell_system = 0 //spawns a spellbook which gives object-type spells instead of verb-type spells for the wizard
 	var/traitor_scaling = 0 			//if amount of traitors scales based on amount of players
 	var/objectives_disabled = 0 			//if objectives are disabled or not
-	var/protect_roles_from_antagonist = 0// If security and such can be traitor/cult/other
+	var/protect_roles_from_antagonist = 0// If security and such can be traitor/other
 	var/continous_rounds = 0			// Gamemodes which end instantly will instead keep on going until the round ends by escape shuttle or nuke.
 	var/allow_Metadata = 0				// Metadata is supported.
 	var/popup_admin_pm = 0				//adminPMs to non-admins show in a pop-up 'reply' window when set to 1.
@@ -76,7 +76,7 @@ var/list/gamemode_cache = list()
 	var/ToRban = 0
 	var/jobs_have_minimal_access = 0	//determines whether jobs use minimal access or expanded access.
 
-	var/cult_ghostwriter = 1               //Allows ghosts to write in blood in cult rounds...
+	var/cult_ghostwriter = 1               //Allows ghosts to write in blood in spooky rounds...
 	var/cult_ghostwriter_req_cultists = 10 //...so long as this many cultists are active.
 
 	var/character_slots = 10				// The number of available character slots
@@ -152,8 +152,6 @@ var/list/gamemode_cache = list()
 	var/human_delay = 0
 	var/robot_delay = 0
 	var/monkey_delay = 0
-	var/alien_delay = 0
-	var/slime_delay = 0
 	var/animal_delay = 0
 
 
@@ -197,7 +195,6 @@ var/list/gamemode_cache = list()
 	var/list/event_delay_upper = list(EVENT_LEVEL_MUNDANE = 9000,	EVENT_LEVEL_MODERATE = 27000,	EVENT_LEVEL_MAJOR = 42000)
 
 	var/aliens_allowed = 0
-	var/alien_eggs_allowed = 0
 	var/ninjas_allowed = 0
 	var/abandon_allowed = 1
 	var/ooc_allowed = 1
@@ -207,7 +204,7 @@ var/list/gamemode_cache = list()
 
 	var/starlight = 0	// Whether space turfs have ambient light or not
 
-	var/list/ert_species = list("Human")
+	var/list/ert_species = list(DEFAULT_SPECIES)
 
 	var/law_zero = "ERROR ER0RR $R0RRO$!R41.%%!!(%$^^__+ @#F0E4'ALL LAWS OVERRIDDEN#*?&110010"
 
@@ -479,9 +476,6 @@ var/list/gamemode_cache = list()
 				if ("aliens_allowed")
 					config.aliens_allowed = 1
 
-				if("alien_eggs_allowed")
-					config.alien_eggs_allowed = 1
-
 				if ("ninjas_allowed")
 					config.ninjas_allowed = 1
 
@@ -707,7 +701,7 @@ var/list/gamemode_cache = list()
 				if("ert_species")
 					config.ert_species = splittext(value, ";")
 					if(!config.ert_species.len)
-						config.ert_species += "Human"
+						config.ert_species += DEFAULT_SPECIES
 
 				if("law_zero")
 					law_zero = value
@@ -784,10 +778,6 @@ var/list/gamemode_cache = list()
 					config.robot_delay = value
 				if("monkey_delay")
 					config.monkey_delay = value
-				if("alien_delay")
-					config.alien_delay = value
-				if("slime_delay")
-					config.slime_delay = value
 				if("animal_delay")
 					config.animal_delay = value
 

@@ -123,10 +123,21 @@ var/list/turf_edge_cache = list()
 /turf/ex_act(severity)
 	return 0
 
-/turf/proc/is_psi_null()
-	return 0
-
 /turf/proc/is_solid_structure()
+	return 1
+
+/turf/attack_hand(mob/user)
+	user.setClickCooldown(DEFAULT_QUICK_COOLDOWN)
+	if (user.lying  && !user.anchored && !user.restrained() && ishuman(user)) //Because do_after's aren't actually interrupted by most things unfortunately.
+		for (var/obj/item/grab/G in user.grabbed_by)
+			if(G.state >= GRAB_AGGRESSIVE)
+				return
+		var/area/A = loc
+		if((!(A.has_gravity)) || (istype(src,/turf/space)))
+			return
+		if(do_after(user, 15 + (user.weakened * 2), src, incapacitation_flags = ~INCAPACITATION_FORCELYING))
+			if(step_towards(user, src))
+				user.visible_message("<font size=1><span class='warning'>[user] crawls on \the [src]</span></font>")
 	return 1
 
 /turf/Enter(var/atom/movable/mover, atom/forget as mob|obj|turf|area)
@@ -173,7 +184,7 @@ var/list/turf_edge_cache = list()
 var/const/enterloopsanity = 100
 /turf/Entered(atom/atom as mob|obj)
 
-	..()
+	. = ..()
 
 	if(!istype(atom, /atom/movable))
 		return
@@ -283,7 +294,7 @@ var/const/enterloopsanity = 100
 
 /turf/proc/remove_cleanables()
 	for(var/obj/effect/O in src)
-		if(istype(O,/obj/effect/rune) || istype(O,/obj/effect/decal/cleanable) || istype(O,/obj/effect/overlay))
+		if(istype(O,/obj/effect/decal/cleanable) || istype(O,/obj/effect/overlay))
 			qdel(O)
 
 /turf/proc/update_blood_overlays()

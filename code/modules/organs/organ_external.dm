@@ -26,7 +26,7 @@
 	var/last_dam = -1                  // used in healing/processing calculations.
 
 	// Appearance vars.
-	var/nonsolid                       // Snowflake warning, reee. Used for slime limbs.
+	var/nonsolid                       // Snowflake warning, reee. Makes limbs translucent.
 	var/icon_name = null               // Icon state base.
 	var/body_part = null               // Part flag
 	var/icon_position = 0              // Used in mob overlay layering calculations.
@@ -453,18 +453,6 @@ This function completely restores a damaged organ to perfect condition.
 			implanted_object.forceMove(get_turf(src))
 			implants -= implanted_object
 
-	if(owner && !ignore_prosthetic_prefs)
-		if(owner.client && owner.client.prefs && owner.client.prefs.real_name == owner.real_name)
-			var/status = owner.client.prefs.organ_data[organ_tag]
-			if(status == "amputated")
-				remove_rejuv()
-			else if(status == "cyborg")
-				var/robodata = owner.client.prefs.rlimb_data[organ_tag]
-				if(robodata)
-					robotize(robodata)
-				else
-					robotize()
-		owner.updatehealth()
 
 /obj/item/organ/external/remove_rejuv()
 	if(owner)
@@ -827,6 +815,10 @@ Note that amputating the affected organ does in fact remove the infection from t
 					"<span class='danger'>\The [owner]'s [src.name] flies off in an arc!</span>",\
 					"<span class='moderate'><b>Your [src.name] goes flying off!</b></span>",\
 					"<span class='danger'>You hear a terrible sound of [gore_sound].</span>")
+				playsound(owner, pick('sound/effects/gore/chop2.ogg', 'sound/effects/gore/chop3.ogg', 'sound/effects/gore/chop4.ogg'), 100, 0)
+			else
+				playsound(owner, 'sound/effects/gore/severed.ogg', 100, 0)
+
 		if(DROPLIMB_BURN)
 			var/gore = "[(robotic >= ORGAN_ROBOT) ? "": " of burning flesh"]"
 			owner.visible_message(
@@ -840,6 +832,7 @@ Note that amputating the affected organ does in fact remove the infection from t
 				"<span class='danger'>\The [owner]'s [src.name] explodes[gore]!</span>",\
 				"<span class='moderate'><b>Your [src.name] explodes[gore]!</b></span>",\
 				"<span class='danger'>You hear the [gore_sound].</span>")
+			playsound(owner, 'sound/effects/gore/chop6.ogg', 100 , 0)//Splat.
 
 	var/mob/living/carbon/human/victim = owner //Keep a reference for post-removed().
 	var/obj/item/organ/external/parent_organ = parent
@@ -1007,6 +1000,7 @@ Note that amputating the affected organ does in fact remove the infection from t
 		if(can_feel_pain())
 			owner.emote("scream")
 
+	playsound(src.loc, "fracture", 100, 1, -2)
 	status |= ORGAN_BROKEN
 	broken_description = pick("broken","fracture","hairline fracture")
 
@@ -1057,8 +1051,8 @@ Note that amputating the affected organ does in fact remove the infection from t
 
 	if(company)
 		var/datum/robolimb/R = all_robolimbs[company]
-		if(!istype(R) || (species && (species.name in R.species_cannot_use)) || \
-		 (R.restricted_to.len && !(species.name in R.restricted_to)) || \
+		if(!istype(R) || (species && (species.get_bodytype(owner) in R.species_cannot_use)) || \
+		 (R.restricted_to.len && !(species.get_bodytype(owner) in R.restricted_to)) || \
 		 (R.applies_to_part.len && !(organ_tag in R.applies_to_part)))
 			R = basic_robolimb
 		else

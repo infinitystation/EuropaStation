@@ -316,6 +316,7 @@
 
 	//actually throw it!
 	src.visible_message("<span class='danger'>[src] has thrown [item]!</span>")
+	playsound(src, 'sound/effects/throw.ogg', 50, 1)
 
 	if(!src.lastarea)
 		src.lastarea = get_area(src.loc)
@@ -390,12 +391,7 @@
 		chem_effects[effect] = magnitude
 
 /mob/living/carbon/get_default_language()
-	if(default_language)
-		return default_language
-
-	if(!species)
-		return null
-	return species.default_language ? all_languages[species.default_language] : null
+	return default_language
 
 /mob/living/carbon/show_inv(var/mob/user)
 	user.set_machine(src)

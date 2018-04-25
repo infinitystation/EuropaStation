@@ -9,8 +9,6 @@
 /datum/surgery_step/robotics/
 	can_infect = 0
 /datum/surgery_step/robotics/can_use(mob/living/user, mob/living/carbon/human/target, target_zone, obj/item/tool)
-	if (isslime(target))
-		return 0
 	if (target_zone == BP_EYES)	//there are specific steps for eye surgery
 		return 0
 	if (!hasorgans(target))
@@ -533,7 +531,7 @@
 		return SURGERY_FAILURE
 
 	if(!target.should_have_organ(BP_BRAIN))
-		user << "<span class='danger'>You're pretty sure [target.species.name_plural] don't normally have a brain.</span>"
+		user << "<span class='danger'>You're pretty sure [target.species.get_bodytype(target)] don't normally have a brain.</span>"
 		return SURGERY_FAILURE
 
 	if(!isnull(target.internal_organs[BP_BRAIN]))

@@ -230,9 +230,3 @@
 	..(newloc, "wood", complexity)
 	glass = 1
 	set_opacity(0)
-
-/obj/machinery/door/unpowered/simple/resin/New(var/newloc,var/material_name,var/complexity)
-	..(newloc, "resin", complexity)
-
-/obj/machinery/door/unpowered/simple/cult/New(var/newloc,var/material_name,var/complexity)
-	..(newloc, "cult", complexity)

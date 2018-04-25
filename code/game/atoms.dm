@@ -200,6 +200,12 @@ its easier to just keep the beam vertical.
 
 //All atoms
 /atom/proc/examine(mob/user, var/distance = -1, var/infix = "", var/suffix = "")
+	if(!isobserver(user))
+		if(get_dist(user, src) > 3)
+			to_chat(user, "<span class='info'>It's too far away to see clearly.</span>")
+			return
+		user.visible_message("<font size=1>[user.name] looks at [src].</font>")
+
 	//This reformat names to get a/an properly working on item descriptions when they are bloody
 	var/f_name = "\a [src][infix]."
 	if(src.blood_DNA && !istype(src, /obj/effect/decal))
@@ -212,8 +218,15 @@ its easier to just keep the beam vertical.
 		else
 			f_name += "oil-stained [name][infix]."
 
-	user << "\icon[src] That's [f_name] [suffix]"
-	user << desc
+	to_chat(user, "\icon[src] That's [f_name] [suffix]")
+	to_chat(user, desc)
+
+	if(HAS_ASPECT(user, ASPECT_APPRAISER))
+		var/value = round(get_value(src) * rand(0.75, 1.25))
+		if(value > 0)
+			to_chat(user, "<span class='notice'>You estimate \the [src] to be worth [value] credit\s.</span>")
+		else
+			to_chat(user, "<span class='notice'>You estimate \the [src] to be worthless.</span>")
 
 	return distance == -1 || (get_dist(src, user) <= distance)
 

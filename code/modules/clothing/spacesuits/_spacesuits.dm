@@ -21,7 +21,7 @@
 	siemens_coefficient = 0.9
 	center_of_mass = null
 	randpixel = 0
-	species_restricted = list("exclude", "Xenomorph")
+	species_restricted = null
 	flash_protection = FLASH_PROTECTION_MAJOR
 	auto_init = TRUE
 
@@ -29,6 +29,11 @@
 		slot_head_str = 'icons/mob/clothing/head_space.dmi',
 		slot_l_hand_str = 'icons/mob/items/lefthand_hats.dmi',
 		slot_r_hand_str = 'icons/mob/items/righthand_hats.dmi'
+		)
+
+	sprite_sheets = list(
+		BODYTYPE_CORVID = 'icons/mob/species/corvid/helmet.dmi',
+		BODYTYPE_OCTOPUS = 'icons/mob/species/octopus/helmet.dmi'
 		)
 
 	var/obj/machinery/camera/camera
@@ -87,7 +92,7 @@
 	siemens_coefficient = 0.9
 	center_of_mass = null
 	randpixel = 0
-	species_restricted = list("exclude", "Xenomorph")
+	species_restricted = null
 
 	item_icons = list(
 		slot_wear_suit_str = 'icons/mob/clothing/suits_space.dmi',

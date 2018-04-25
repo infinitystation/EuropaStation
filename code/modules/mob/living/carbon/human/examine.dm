@@ -1,4 +1,10 @@
 /mob/living/carbon/human/examine(mob/user)
+	if(!isobserver(user))
+		if(get_dist(user, src) > 3)
+			to_chat(user, "<span class='info'>It's too far away to see clearly.</span>")
+			return
+		user.visible_message("<font size=1>[user.name] looks at [src].</font>")
+
 	var/skipgloves = 0
 	var/skipsuitstorage = 0
 	var/skipjumpsuit = 0
@@ -40,12 +46,6 @@
 	msg += "<EM>[src.name]</EM>"
 
 	var/is_synth = isSynthetic()
-	if(!(skipjumpsuit && skipface))
-		var/species_name = "\improper "
-		if(is_synth)
-			species_name += "Cyborg "
-		species_name += "[species.name]"
-		msg += ", <b><font color='[species.get_flesh_colour(src)]'> \a [species_name]!</font></b>"
 	var/extra_species_text = species.get_additional_examine_text(src)
 	if(extra_species_text)
 		msg += "[extra_species_text]<br>"

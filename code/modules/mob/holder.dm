@@ -8,7 +8,7 @@ var/list/holder_mob_icon_cache = list()
 	slot_flags = SLOT_HEAD | SLOT_HOLSTER
 
 	sprite_sheets = list(
-		"Neo-Corvid" = 'icons/mob/species/corvid/head.dmi'
+		BODYTYPE_CORVID = 'icons/mob/species/corvid/head.dmi'
 		)
 
 	item_icons = list(
@@ -115,9 +115,6 @@ var/list/holder_mob_icon_cache = list()
 
 /obj/item/holder/mouse
 	w_class = 1
-
-/obj/item/holder/borer
-
 
 /obj/item/holder/attackby(var/obj/item/W, var/mob/user)
 	for(var/mob/M in src.contents)

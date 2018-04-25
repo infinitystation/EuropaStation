@@ -384,6 +384,7 @@
 
 		usr << browse("<HTML><HEAD><TITLE>[name]</TITLE></HEAD><BODY>[info_links][stamps]</BODY></HTML>", "window=[name]") // Update the window
 
+		playsound(src, pick('sound/effects/pen1.ogg','sound/effects/pen2.ogg'), 10)
 		update_icon()
 
 
@@ -469,6 +470,7 @@
 		stamped += P.type
 		overlays += stampoverlay
 
+		playsound(src, 'sound/effects/stamp.ogg', 50, 1)
 		user << "<span class='notice'>You stamp the paper with your rubber stamp.</span>"
 
 	else if(istype(P, /obj/item/flame))
