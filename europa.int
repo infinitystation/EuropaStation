@@ -1,6 +1,9 @@
 // BEGIN_INTERNALS
 /*
-MAP_ICON_TYPE: 0
+DIR: code code\modules code\modules\client code\modules\client\preference_setup code\modules\client\preference_setup\background code\modules\client\preference_setup\general code\modules\client\preference_setup\global 
 AUTO_FILE_DIR: OFF
+MAP_ICON_TYPE: 0
+WINDOW: code\modules\client\preference_setup\background\01_background.dm;code\modules\client\preference_setup\general\05_records.dm
+FILE: code\modules\client\preference_setup\background\01_background.dm
 */
 // END_INTERNALS

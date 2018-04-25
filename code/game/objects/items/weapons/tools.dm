@@ -85,6 +85,7 @@
 	center_of_mass = "x=16;y=7"
 	attack_verb = list("stabbed")
 	lock_picking_level = 5
+	sharp = TRUE
 
 /obj/item/screwdriver/isscrewdriver()
 	return 1
@@ -513,7 +514,7 @@
 /obj/item/combitool/omni
 	name = "digitool"
 	icon_state = "digitool"
-	desc = "An advanced alien design with countless possibilities."
+	desc = "An advanced design with countless possibilities."
 	tools = list(
 		"crowbar",
 		"screwdriver",

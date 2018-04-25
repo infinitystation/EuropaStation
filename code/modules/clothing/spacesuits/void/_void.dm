@@ -15,13 +15,13 @@
 		)
 
 	//Species-specific stuff.
-	species_restricted = list("Human")
+	species_restricted = list(BODYTYPE_HUMAN)
 	sprite_sheets = list(
-		"Neo-Corvid" = 'icons/mob/species/corvid/helmet.dmi',
-		"Octopus" = 'icons/mob/species/octopus/helmet.dmi'
+		BODYTYPE_CORVID = 'icons/mob/species/corvid/helmet.dmi',
+		BODYTYPE_OCTOPUS = 'icons/mob/species/octopus/helmet.dmi'
 		)
 	sprite_sheets_obj = list(
-		"Neo-Corvid" = 'icons/obj/clothing/species/corvid/hats.dmi'
+		BODYTYPE_CORVID = 'icons/obj/clothing/species/corvid/hats.dmi'
 		)
 
 	light_power = 10
@@ -46,14 +46,14 @@
 		slot_r_hand_str = 'icons/mob/items/righthand_spacesuits.dmi'
 		)
 
-	species_restricted = list("Human")
+	species_restricted = list(BODYTYPE_HUMAN)
 
 	sprite_sheets = list(
-		"Neo-Corvid" = 'icons/mob/species/corvid/suit.dmi',
-		"Octopus" = 'icons/mob/species/octopus/suit.dmi'
+		BODYTYPE_CORVID = 'icons/mob/species/corvid/suit.dmi',
+		BODYTYPE_OCTOPUS = 'icons/mob/species/octopus/suit.dmi'
 		)
 	sprite_sheets_obj = list(
-		"Neo-Corvid" = 'icons/obj/clothing/species/corvid/suits.dmi'
+		BODYTYPE_CORVID = 'icons/obj/clothing/species/corvid/suits.dmi'
 		)
 
 	//Breach thresholds, should ideally be inherited by most (if not all) voidsuits.
@@ -74,13 +74,6 @@
 	user << "\The [src] has [english_list(part_list)] installed."
 	if(tank && in_range(src,user))
 		user << "<span class='notice'>The wrist-mounted pressure gauge reads [max(round(tank.air_contents.return_pressure()),0)] kPa remaining in \the [tank].</span>"
-
-/obj/item/clothing/suit/space/void/refit_for_species(var/target_species)
-	..()
-	if(istype(helmet))
-		helmet.refit_for_species(target_species)
-	if(istype(boots))
-		boots.refit_for_species(target_species)
 
 /obj/item/clothing/suit/space/void/equipped(mob/M)
 	..()

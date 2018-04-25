@@ -5,7 +5,7 @@
 	var/tint = TINT_NONE							         // Sets the item's level of visual impairment tint.
 
 	//Only these species can wear this kit.
-	var/list/species_restricted = list("exclude")
+	var/list/species_restricted = null
 
 	var/gunshot_residue //Used by forensics.
 	var/list/accessories = list()
@@ -75,38 +75,6 @@
 				return 0
 	return 1
 
-/obj/item/clothing/proc/refit_for_species(var/target_species)
-	if(!species_restricted)
-		return //this item doesn't use the species_restricted system
-
-	//Set species_restricted list
-	switch(target_species)
-		if("Human")	//humanoid bodytypes
-			species_restricted = list("Human") //humans/machines can wear each other's suits
-		else
-			species_restricted = list(target_species)
-
-	if (sprite_sheets_obj && (target_species in sprite_sheets_obj))
-		icon = sprite_sheets_obj[target_species]
-	else
-		icon = initial(icon)
-
-/obj/item/clothing/head/helmet/refit_for_species(var/target_species)
-	if(!species_restricted)
-		return //this item doesn't use the species_restricted system
-
-	//Set species_restricted list
-	switch(target_species)
-		if("Human")
-			species_restricted = list("Human")
-		else
-			species_restricted = list(target_species)
-
-	if (sprite_sheets_obj && (target_species in sprite_sheets_obj))
-		icon = sprite_sheets_obj[target_species]
-	else
-		icon = initial(icon)
-
 ///////////////////////////////////////////////////////////////////////
 // Ears: headsets, earmuffs and tiny objects
 /obj/item/clothing/ears
@@ -114,7 +82,7 @@
 	w_class = 1.0
 	throwforce = 2
 	slot_flags = SLOT_EARS
-	sprite_sheets = list("Neo-Corvid" = 'icons/mob/species/corvid/ears.dmi')
+	sprite_sheets = list(BODYTYPE_CORVID = 'icons/mob/species/corvid/ears.dmi')
 
 /obj/item/clothing/ears/update_clothing_icon()
 	if (ismob(src.loc))
@@ -175,8 +143,8 @@ BLIND     // can't see anything
 	var/darkness_view = 0//Base human is 2
 	var/see_invisible = -1
 	sprite_sheets = list(
-		"Octopus" = 'icons/mob/species/octopus/eyes.dmi',
-		"Neo-Corvid" = 'icons/mob/species/corvid/eyes.dmi'
+		BODYTYPE_OCTOPUS = 'icons/mob/species/octopus/eyes.dmi',
+		BODYTYPE_CORVID = 'icons/mob/species/corvid/eyes.dmi'
 		)
 
 /obj/item/clothing/glasses/get_mob_overlay(mob/user_mob, slot)
@@ -207,7 +175,7 @@ BLIND     // can't see anything
 	slot_flags = SLOT_GLOVES
 	attack_verb = list("challenged")
 	sprite_sheets = list(
-		"Neo-Corvid" = 'icons/mob/species/corvid/gloves.dmi'
+		BODYTYPE_CORVID = 'icons/mob/species/corvid/gloves.dmi'
 		)
 	blood_overlay_type = "bloodyhands"
 
@@ -265,8 +233,8 @@ BLIND     // can't see anything
 	light_color = COLOUR_LTEMP_40W_TUNGSTEN
 
 	sprite_sheets = list(
-		"Octopus" = 'icons/mob/species/octopus/head.dmi',
-		"Neo-Corvid" = 'icons/mob/species/corvid/head.dmi'
+		BODYTYPE_OCTOPUS = 'icons/mob/species/octopus/head.dmi',
+		BODYTYPE_CORVID = 'icons/mob/species/corvid/head.dmi'
 		)
 	blood_overlay_type = "helmetblood"
 
@@ -313,13 +281,6 @@ BLIND     // can't see anything
 	var/success
 	if(istype(user, /mob/living/silicon/robot/drone))
 		var/mob/living/silicon/robot/drone/D = user
-		if(D.hat)
-			success = 2
-		else
-			D.wear_hat(src)
-			success = 1
-	else if(istype(user, /mob/living/carbon/alien/diona))
-		var/mob/living/carbon/alien/diona/D = user
 		if(D.hat)
 			success = 2
 		else
@@ -373,7 +334,7 @@ BLIND     // can't see anything
 	slot_flags = SLOT_MASK
 	body_parts_covered = FACE|EYES
 	sprite_sheets = list(
-		"Neo-Corvid" = 'icons/mob/species/corvid/masks.dmi'
+		BODYTYPE_CORVID = 'icons/mob/species/corvid/masks.dmi'
 		)
 
 	var/voicechange = 0
@@ -412,8 +373,8 @@ BLIND     // can't see anything
 	w_class = 3
 
 	sprite_sheets = list(
-		"Octopus" = 'icons/mob/species/octopus/suit.dmi',
-		"Neo-Corvid" = 'icons/mob/species/corvid/suit.dmi'
+		BODYTYPE_OCTOPUS = 'icons/mob/species/octopus/suit.dmi',
+		BODYTYPE_CORVID = 'icons/mob/species/corvid/suit.dmi'
 		)
 
 /obj/item/clothing/suit/update_clothing_icon()

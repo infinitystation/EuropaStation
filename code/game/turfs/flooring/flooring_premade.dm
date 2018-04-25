@@ -34,11 +34,6 @@
 	icon_state = "grass0"
 	initial_flooring = /decl/flooring/grass
 
-/turf/simulated/floor/diona
-	name = "biomass"
-	icon = 'icons/turf/floors.dmi'
-	initial_flooring = /decl/flooring/diona
-
 /turf/simulated/floor/carpet/blue
 	name = "blue carpet"
 	icon_state = "bcarpet"
@@ -102,15 +97,6 @@
 	if(!air) make_air()
 	air.adjust_gas("sleeping_agent", ATMOSTANK_NITROUSOXIDE)
 
-/turf/simulated/floor/cult
-	name = "engraved floor"
-	icon = 'icons/turf/flooring/cult.dmi'
-	icon_state = "cult"
-	initial_flooring = /decl/flooring/reinforced/cult
-
-/turf/simulated/floor/cult/cultify()
-	return
-
 /turf/simulated/floor/tiled/dark
 	name = "dark floor"
 	icon_state = "dark"
@@ -140,11 +126,6 @@
 	icon = 'icons/turf/flooring/linoleum.dmi'
 	icon_state = "lino"
 	initial_flooring = /decl/flooring/linoleum
-
-/turf/simulated/floor/tiled/nullglass
-	name = "nullglass floor"
-	icon_state = "nullglass"
-	initial_flooring = /decl/flooring/tiling/nullglass
 
 //ATMOS PREMADES
 /turf/simulated/floor/reinforced/airless

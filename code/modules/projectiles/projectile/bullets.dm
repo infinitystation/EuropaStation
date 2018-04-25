@@ -7,9 +7,10 @@
 	check_armour = "bullet"
 	embed = 1
 	sharp = 1
-	var/mob_passthrough_check = 0
-
+	remains_type = /obj/item/material/shard/shrapnel
 	muzzle_type = /obj/effect/projectile/bullet/muzzle
+
+	var/mob_passthrough_check = 0
 
 	mob_hit_sound = list('sound/effects/gore/bullethit2.ogg', 'sound/effects/gore/bullethit3.ogg') //Sound it makes when it hits a mob. It's a list so you can put multiple hit sounds there.
 
